@@ -18,7 +18,6 @@ PIGPIO_URL="https://github.com/joan2937/pigpio/archive/v79.tar.gz"
 MCB2835_URL="http://www.airspayce.com/mikem/bcm2835/bcm2835-1.50.tar.gz"
 WIRINGPI_URL="https://project-downloads.drogon.net/wiringpi-latest.deb"
 INFLUXDB_VERSION="1.8.0"
-VIRTUALENV_VERSION="20.7.0"
 
 # Required apt packages. This has been tested with Raspbian for the
 # Raspberry Pi and Ubuntu, it should work with most Debian-based systems.
@@ -202,9 +201,8 @@ case "${1:-''}" in
         printf "\n#### Checking python 3 virtualenv\n"
         if [[ ! -e ${MYCODO_PATH}/env/bin/python3 ]]; then
             printf "#### Virtualenv doesn't exist. Creating...\n"
-            python3 -m pip install virtualenv==${VIRTUALENV_VERSION}
             rm -rf "${MYCODO_PATH}"/env
-            python3 -m virtualenv --system-site-packages -p "${PYTHON_BINARY_SYS_LOC}" "${MYCODO_PATH}"/env
+            python3 -m venv --system-site-packages "${MYCODO_PATH}"/env
         else
             printf "#### Virtualenv already exists, skipping creation\n"
         fi
@@ -432,8 +430,6 @@ case "${1:-''}" in
         printf "\n#### Installing prerequisite apt packages and update pip\n"
         apt-get remove -y apache2 python-cffi-backend python3-cffi-backend
         apt-get install -y ${APT_PKGS}
-        python3 /usr/lib/python3/dist-packages/easy_install.py pip
-        python3 -m pip install --upgrade pip
     ;;
     'update-permissions')
         printf "\n#### Setting permissions\n"
